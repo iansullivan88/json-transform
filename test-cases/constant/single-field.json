@@ -1,0 +1,22 @@
+{
+    "suiteTransform": {
+        "key": "value"
+    },
+    "cases": [{
+        "input": null,
+        "expected": {"key":"value"}
+     },{
+        "input": true,
+        "expected": {"key":"value"}
+     },{
+        "input": "test",
+        "expected": {"key":"value"}
+     },{
+        "input": {},
+        "expected": {"key":"value"}
+     },{
+        "input": [],
+        "expected": {"key":"value"}
+     }]
+}
+            

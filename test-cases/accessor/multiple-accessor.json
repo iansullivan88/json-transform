@@ -1,0 +1,18 @@
+{
+    "suiteTransform": {
+        "key": "$(level1.level2)"
+    },
+    "cases": [{
+        "input": null
+     },{
+        "input": {"level1":"value"}
+     },{
+        "input": {"level2":"value"}
+     },{
+        "input": {"level1":{"foo":"bar"}}
+     },{
+        "input": {"level1":{"level2":"expected"}},
+        "expected": {"key":"expected"}
+     }]
+}
+            

@@ -1,0 +1,24 @@
+{
+    "suiteTransform": {
+        "key": {
+            "nested": "value"
+        }
+    },
+    "cases": [{
+        "input": null,
+        "expected": {"key":{"nested":"value"}}
+     },{
+        "input": true,
+        "expected": {"key":{"nested":"value"}}
+     },{
+        "input": "test",
+        "expected": {"key":{"nested":"value"}}
+     },{
+        "input": {},
+        "expected": {"key":{"nested":"value"}}
+     },{
+        "input": [],
+        "expected": {"key":{"nested":"value"}}
+     }]
+}
+            

@@ -1,0 +1,24 @@
+{
+    "suiteTransform": {
+        "key": "$(source)"
+    },
+    "cases": [{
+        "input": null
+     },{
+        "input": "key"
+     },{
+        "input": "accessor"
+     },{
+        "input": {"key": null}
+     },{
+        "input": {"source": null},
+        "expected": {"key":null}
+     },{
+        "input": {"source":"value"},
+        "expected": {"key":"value"}
+     },{
+        "input": {"source":"value", "ignored":"value2"},
+        "expected": {"key":"value"}
+     }]
+}
+            

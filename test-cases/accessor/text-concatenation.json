@@ -1,0 +1,14 @@
+{
+    "suiteTransform": {
+        "output": "$(f) $(b)"
+    },
+    "cases": [{
+        "input": {"f":"foo"} 
+     },{
+        "input": {"b":"bar"} 
+     },{
+        "input": {"f":"foo","b":"bar"},
+        "expected": {"output":"foo bar"}
+     }]
+}
+            

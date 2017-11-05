@@ -1,0 +1,27 @@
+{
+    "suiteTransform": {
+        "id": "$(orderId)",
+        "dateString": "$(date.year)-$(date.month)-$(date.day)",
+        "type": "order"
+    },
+    "cases": [{
+        "input": {
+            "orderId": 12345,
+            "date": {
+                "day":"03",
+                "month":"04",
+                "year":"2005"
+            },
+            "extra-info": {
+                "foo":"bar",
+                "fizz":"buzz"
+            }
+        },
+        "expected": {
+            "id": 12345,
+            "dateString": "2005-04-03",
+            "type": "order"
+        }
+     }]
+}
+            
