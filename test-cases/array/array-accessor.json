@@ -1,0 +1,14 @@
+{
+    "suiteTransform": {
+        "items[$item <- $(key1.key2)]": true
+    },
+    "cases": [{
+        "input": {"key2": 3} 
+     },{
+        "input": {"key1": {"key2": false}}
+     },{
+        "input": {"key1": {"key2": []}},
+        "expected": {"items": []} 
+     }]
+}
+            

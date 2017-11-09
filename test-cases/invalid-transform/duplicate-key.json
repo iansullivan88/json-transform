@@ -1,0 +1,6 @@
+{
+    "suiteTransform": {
+        "key":"value",
+        "key[$v<-$(source)]":"value"
+    }
+}

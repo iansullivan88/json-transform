@@ -1,37 +1,67 @@
 # json-transform
 
-A Haskell library for transforming json values.
+A Haskell library for transforming json values, for example:
 
 input:
 ```
-{
-    "orderId": 12345,
-    "date": {
-       "day":"03",
-       "month":"04",
-       "year":"2005"
-    },
-    "extra-info": {
-       "foo":"bar",
-       "fizz":"buzz"
-    }
- }
- ```
+{  
+    "school":"Bear Academy",
+    "courses":[  
+        {  
+            "id":2,
+            "name":"Honey Stealing",
+            "startDate":{  
+                "day":"02",
+                "month":"12",
+                "year":"2017"
+            },
+            "enrolled":12
+        },
+        {  
+            "id":2,
+            "name":"Salmon Fishing",
+            "startDate":{  
+                "day":"27",
+                "month":"01",
+                "year":"2018"
+            },
+            "enrolled":10
+        }
+    ],
+    "address":"The Forrest",
+    "motto":"Ursus docere"
+}
+```
 
 transform:
 ```
-{
-   "id": "$(orderId)",
-   "dateString": "$(date.year)-$(date.month)-$(date.day)",
-   "type": "order"
+{  
+    "mySchool":"$(school)",
+    "myName":"Paddington",
+    "myCourses[$c <- $(courses)]":{  
+        "name":"$c(name)",
+        "startDate":"$c(startDate.year)-$c(startDate.month)-$c(startDate.day)",
+        "enrolled":"$c(enrolled)"
+    }
 }
 ```
 
 output:
 ```
-{
-   "id": 12345,
-   "dateString": "2005-04-03",
-   "type": "order"
+{  
+    "mySchool":"Bear Academy",
+    "myName":"Paddington",
+    "myCourses":[  
+        {  
+            "name":"Honey Stealing",
+            "startDate":"2017-12-02",
+            "enrolled":12
+        },
+        {  
+            "name":"Salmon Fishing",
+            "startDate":"2018-01-27",
+            "enrolled":10
+        }
+    ]
 }
 ```

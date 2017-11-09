@@ -1,0 +1,3 @@
+{
+    "suiteTransform": { "price[$var<-$(source)]extra": "test" }
+}

@@ -1,0 +1,15 @@
+{
+    "suiteTransform": {
+        "items[$item <- $(source)]": true
+    },
+    "cases": [{
+        "input": {"source": 3} 
+     },{
+        "input": {"source": []},
+        "expected": {"items":[]} 
+     },{
+        "input": {"source": [1,2,3]},
+        "expected": {"items": [true,true,true]} 
+     }]
+}
+            

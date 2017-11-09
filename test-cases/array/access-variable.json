@@ -1,0 +1,20 @@
+{
+    "suiteTransform": {
+        "items[$item <- $(source)]": {
+            "foo":"bar",
+            "value":"$item(key1.key2)"
+        }
+    },
+    "cases": [{
+        "input": {"source": [
+            {"key1":{"key2":"a"}},
+            {"key1":{"key2":"b"}},
+            {"key1":{"key2":"c"}}
+        ]},
+        "expected": {"items": [
+            {"foo":"bar","value":"a"},        
+            {"foo":"bar","value":"b"},        
+            {"foo":"bar","value":"c"} 
+        ]} 
+     }]
+}

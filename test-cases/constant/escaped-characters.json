@@ -1,0 +1,10 @@
+{
+    "suiteTransform": {
+        "key\\[\\]": "price is \\$10"
+    },
+    "cases": [{
+        "input": null,
+        "expected": {"key[]":"price is $10"}
+     }]
+}
+            
