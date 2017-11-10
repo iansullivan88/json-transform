@@ -8,6 +8,7 @@ module Data.JSONTransform
 import Control.Monad
 import Data.Aeson
 import qualified Data.HashMap.Lazy as Map
+import Data.Foldable
 import Data.List
 import Data.Monoid
 import Data.Scientific
@@ -44,11 +45,35 @@ type Dictionary = Map.HashMap T.Text Value
 -- | Parses a json 'Value' and returns either a parse error or and error
 -- about why parsing failed.
 parseTransform :: Value -> Either T.Text JSONTransform
-parseTransform v = JSONTransform <$> fromJSONValue v
+parseTransform v = do t <- fromJSONValue v 
+                      validateDuplicateKeys t
+                      validateDuplicateVariables t
+                      pure $ JSONTransform t
 
 -- | Transforms a json 'Value' using the supplied 'JSONTransform'
 transform :: JSONTransform -> Value -> Either T.Text Value
 transform (JSONTransform t) v = fromTValue (Map.singleton T.empty v) t
+
+-- | Returns 'Left' if the same variable name is used twice in the same json branch
+validateDuplicateVariables :: TValue -> Either T.Text ()
+validateDuplicateVariables = go [T.empty] where
+    go vs t = case t of
+        (TObject kvps) -> traverse_ (validateKvp vs) kvps
+        (TArray a)     -> traverse_ (go vs) a
+        _              -> Right ()
+    validateKvp vs kvp = case kvp of
+                              (TextKey _, t)          -> go vs t
+                              (GeneratorKey _ v _, t)
+                                | v `elem` vs -> Left $ T.concat ["The variable '", v, "' is declared twice"]
+                                | otherwise   -> go (v:vs) t
+                            
+
+validateDuplicateKeys :: TValue -> Either T.Text ()
+validateDuplicateKeys (TObject kvps) = case duplicates $ fmap (keyName . fst) kvps of
+                                             []    -> traverse_ (validateDuplicateKeys . snd) kvps
+                                             (k:_) -> Left $ T.append "Duplicate key: " k
+validateDuplicateKeys (TArray vs)    = traverse_ validateDuplicateKeys vs
+validateDuplicateKeys _              = Right ()
 
 fromJSONValue :: Value -> Either T.Text TValue
 fromJSONValue v = case v of
@@ -108,6 +133,9 @@ valueFromAccessor d a@(Accessor var ks) = do
     s <- maybe (Left $ T.append "Variable not in scope: " var) Right (Map.lookup var d)
     maybe (Left $ T.append "Can't read value: " (showAccessor a)) Right (valueForKeys s ks)
 
+keyName :: KeyExpression -> T.Text
+keyName (GeneratorKey k _ _) = k
+keyName (TextKey k)          = k
 
 -- | Try to extract a 'Value' using a list of keys 
 -- and a source json 'Value'
@@ -168,3 +196,10 @@ variableParser = T.pack <$> many1 alphaNum
 
 specialCharacters :: String
 specialCharacters = "$()[]\\."
+
+--------------
+-- Utilities
+--------------
+
+duplicates :: (Ord a, Eq a) => [a] -> [a]
+duplicates = map head . filter ((>1) . length) . group . sort
