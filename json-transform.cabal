@@ -1,13 +1,13 @@
 name:                json-transform
-version:             0.1.0.0
+version:             0.2.0
 synopsis:            Transforms one json value to another
 description:         Transforms one json value to another
-homepage:            https://github.com/githubuser/json-transform#readme
-license:             BSD3
+homepage:            https://github.com/iansullivan88/json-transform
+license:             MIT
 license-file:        LICENSE
-author:              Author name here
-maintainer:          example@example.com
-copyright:           2017 Author name here
+author:              Ian Sullivan
+maintainer:          Ian Sullivan
+copyright:           2017 Ian Sullivan
 category:            Web
 build-type:          Simple
 extra-source-files:  README.md
