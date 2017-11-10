@@ -1,21 +1,21 @@
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TupleSections #-}
+{-# LANGUAGE TupleSections     #-}
 
 module Data.JSONTransform
     ( JSONTransform, transform, parseTransform
     ) where
 
-import Control.Monad
-import Data.Aeson
+import           Control.Monad
+import           Data.Aeson
+import           Data.Foldable
 import qualified Data.HashMap.Lazy as Map
-import Data.Foldable
-import Data.List
-import Data.Monoid
-import Data.Scientific
-import qualified Data.Text as T
-import qualified Data.Vector as V
-import Text.Parsec
-import Text.Parsec.Error
+import           Data.List
+import           Data.Monoid
+import           Data.Scientific
+import qualified Data.Text         as T
+import qualified Data.Vector       as V
+import           Text.Parsec
+import           Text.Parsec.Error
 
 -- | A type to represent a transform from one json value to another
 newtype JSONTransform = JSONTransform TValue
@@ -45,7 +45,7 @@ type Dictionary = Map.HashMap T.Text Value
 -- | Parses a json 'Value' and returns either a parse error or and error
 -- about why parsing failed.
 parseTransform :: Value -> Either T.Text JSONTransform
-parseTransform v = do t <- fromJSONValue v 
+parseTransform v = do t <- fromJSONValue v
                       validateDuplicateKeys t
                       validateDuplicateVariables t
                       pure $ JSONTransform t
@@ -66,7 +66,7 @@ validateDuplicateVariables = go [T.empty] where
                               (GeneratorKey _ v _, t)
                                 | v `elem` vs -> Left $ T.concat ["The variable '", v, "' is declared twice"]
                                 | otherwise   -> go (v:vs) t
-                            
+
 
 validateDuplicateKeys :: TValue -> Either T.Text ()
 validateDuplicateKeys (TObject kvps) = case duplicates $ fmap (keyName . fst) kvps of
@@ -86,7 +86,7 @@ fromJSONValue v = case v of
     where
         parseKvp (k, va) = (,) <$> myParse keyExpParser k <*> fromJSONValue va
         myParse p ex = case parse p "" ex of
-                             (Left err)   -> Left $ formatError ex err
+                             (Left err)  -> Left $ formatError ex err
                              (Right ex') -> Right ex'
 
 fromTValue :: Dictionary -> TValue -> Either T.Text Value
@@ -137,7 +137,7 @@ keyName :: KeyExpression -> T.Text
 keyName (GeneratorKey k _ _) = k
 keyName (TextKey k)          = k
 
--- | Try to extract a 'Value' using a list of keys 
+-- | Try to extract a 'Value' using a list of keys
 -- and a source json 'Value'
 valueForKeys :: Value -> [T.Text] -> Maybe Value
 valueForKeys o aks = go o ([],aks) where
@@ -154,13 +154,13 @@ formatKeys :: [T.Text] -> T.Text
 formatKeys = T.concat . intersperse "."
 
 -- | Combines two json 'Value's into a single Value.
--- This might fail eg a bool and a number can't be 
+-- This might fail eg a bool and a number can't be
 -- sensibly combined
 combineJSONValue :: Value -> Value -> Maybe Value
-combineJSONValue v Null = Just v
-combineJSONValue Null v = Just v
+combineJSONValue v Null                  = Just v
+combineJSONValue Null v                  = Just v
 combineJSONValue (String t1) (String t2) = Just $ String $ t1 <> t2
-combineJSONValue _ _ = Nothing
+combineJSONValue _ _                     = Nothing
 
 --------------
 -- Parsing
@@ -170,7 +170,7 @@ valueExpParser :: Parsec T.Text () [ValueExp]
 valueExpParser = many ((AccessorValue <$> try accessorParser) <|> (TextValue <$> literalParser)) <* eof
 
 keyExpParser :: Parsec T.Text () KeyExpression
-keyExpParser = do 
+keyExpParser = do
     key <- literalParser
     (eof *> pure (TextKey key)) <|> indexExp key where
         indexExp k = between (char '[') (char ']') (do
@@ -187,7 +187,7 @@ accessorParser = do void $ char '$'
                        ks <- sepBy1 literalParser (char '.')
                        return $ Accessor var ks
 
-literalParser :: Parsec T.Text () T.Text 
+literalParser :: Parsec T.Text () T.Text
 literalParser = T.pack <$> many1 litChar where
     litChar = try (noneOf specialCharacters <|> (char '\\' *> oneOf specialCharacters))
 
