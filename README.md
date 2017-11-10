@@ -1,6 +1,6 @@
 # json-transform
 
-A Haskell library for transforming json values, for example:
+A command line tool and Haskell library for transforming json values, for example:
 
 input:
 ```
@@ -65,3 +65,17 @@ output:
     ]
 }
 ```
+
+## CLI
+
+```
+Usage: json-transform (-i|--input FILENAME) (-t|--transform FILENAME)
+
+Available options:
+  -i,--input FILENAME      a path to the input file or - to read from stdin
+  -t,--transform FILENAME  a path to the transform file or - to read from stdin
+```
+
+## Why
+
+Just for fun
